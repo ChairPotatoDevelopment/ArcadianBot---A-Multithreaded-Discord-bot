@@ -91,7 +91,7 @@ public class Main implements EventListener{
                         for (Thread thread: threadList){
 
 
-                            EmbedBuilder ebuilder = new EmbedBuilder().setTitle("SYSTEM -").setDescription("Terminating CommandServiceVendor#" + i).setColor(java.awt.Color.red);
+                            EmbedBuilder ebuilder = new EmbedBuilder().setTitle("SYSTEM -").setDescription("Terminating CommandServiceBranch#" + i).setColor(java.awt.Color.red);
                             MessageEmbed ebuilt = ebuilder.build();
 
                             message.getMessage().getTextChannel().sendMessage(ebuilt).queue();
@@ -102,7 +102,7 @@ public class Main implements EventListener{
                         EmbedBuilder ebuilder = new EmbedBuilder().setTitle("SYSTEM -").setDescription("Terminating CoreServiceVendor#0").setColor(java.awt.Color.red);
                         MessageEmbed ebuilt = ebuilder.build();
 
-                        message.getMessage().getTextChannel().sendMessage(ebuilt).queue();
+                        message.getMessage().getTextChannel().sendMessage(ebuilt).complete();
 
                         System.exit(0);
 
