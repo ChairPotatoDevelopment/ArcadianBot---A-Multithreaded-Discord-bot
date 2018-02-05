@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ArcadianBot" />
+        <module name="tobi" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="ArcadianBot" target="1.5" />
+      <module name="ArcadianBot" target="1.8" />
+      <module name="tobi" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
