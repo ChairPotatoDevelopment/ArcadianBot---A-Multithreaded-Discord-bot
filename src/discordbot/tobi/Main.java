@@ -12,6 +12,7 @@ import net.dv8tion.jda.core.hooks.EventListener;
 
 import javax.security.auth.login.LoginException;
 
+import java.awt.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
@@ -116,13 +117,22 @@ public class Main implements EventListener{
                                         DummyThread process = new DummyThread();
                                         process.start();
                                         dummyVendors.add(process);
+                                        message.getTextChannel().sendMessage(new EmbedBuilder().setAuthor("System").setTitle("DummyVendor#" + Main.dummyVendors.indexOf(process)).setDescription("DummyVendor#" + Main.dummyVendors.indexOf(process) + " has been successfully created.").setColor(Color.green).build()).complete();
+                                        break;
                                     case "commandVendor":
                                         CommandProcessor cProcess = new CommandProcessor(message.getMessage(), true);
                                         cProcess.start();
                                         commandVendors.add(cProcess);
-
+                                        break;
                                 }
                             case "stop":
+                                break;
+                            case "list":
+                                for (Thread thr: dummyVendors) {
+                                    message.getTextChannel().sendMessage(new EmbedBuilder().setAuthor("System").setTitle("DummyVendor#" + Main.dummyVendors.indexOf(thr)).setDescription("DummyVendor#" + Main.dummyVendors.indexOf(thr) + " is running.").setColor(Color.magenta).build()).complete();
+
+                                }
+                                break;
 
                         }
 
