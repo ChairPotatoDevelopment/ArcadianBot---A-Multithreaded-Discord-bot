@@ -1,10 +1,5 @@
 package discordbot.tobi;
 
-import com.google.gson.Gson;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import net.dv8tion.jda.core.*;
 
 import net.dv8tion.jda.core.entities.*;
@@ -13,18 +8,11 @@ import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.EventListener;
-import net.dv8tion.jda.core.managers.GuildController;
-import org.json.JSONObject;
 
 
 import javax.security.auth.login.LoginException;
-import javax.swing.*;
 
-import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.*;
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.List;
 
@@ -33,7 +21,11 @@ public class Main implements EventListener{
 
     public static JDA jda;
 
-    public static List<Thread> threadList = new ArrayList<Thread>();
+    public static List<CommandProcessor> commandVendors = new ArrayList<CommandProcessor>();
+    public static List<Thread> gameVendors = new ArrayList<Thread>();
+    public static List<Thread> dataVendors = new ArrayList<Thread>();
+    public static List<Thread> miscVendors = new ArrayList<Thread>();
+    public static List<Thread> dummyVendors = new ArrayList<Thread>();
 
 
     public static void main(String[] args){
@@ -51,13 +43,13 @@ public class Main implements EventListener{
             System.out.println("Loaded bot.");
 
         } catch(LoginException e) {
-            System.err.println("T0B1 ran into an exception during build:");
+            System.err.println("T0B1 ran into an exception whilst attempting to log in:");
             e.printStackTrace();
         } catch(InterruptedException e) {
-            System.err.println("T0B1 ran into an exception during build:");
+            System.err.println("T0B1 ran into an InterruptedException during build:");
             e.printStackTrace();
         } catch(RateLimitedException e) {
-            System.err.println("T0B1 ran into an exception during build:");
+            System.err.println("T0B1 ran into an RateLimitedException during build:");
             e.printStackTrace();
         }
 
@@ -82,13 +74,20 @@ public class Main implements EventListener{
             @Override
             public void onEvent(Event event) {
 
+                /*
+                Some commands are awkward to work with in the CommandProcessor. This is for
+                certain commands which would fit better outside of the CommandProcessor such as
+                the shutdown command. If the bot is shutting down the Command Vendors, the
+                process could terminate the thread that the shutdown is occurring on.
+                 */
+
                 if (event instanceof MessageReceivedEvent) {
 
                     MessageReceivedEvent message = ((MessageReceivedEvent) event);
 
-                    if (message.getMessage().getContentRaw().startsWith("!shutdown")) {
+                    if (message.getMessage().getContentRaw().toLowerCase().startsWith("!shutdown")) {
                         int i = 0;
-                        for (Thread thread: threadList){
+                        for (Thread thread: commandVendors){
 
 
                             EmbedBuilder ebuilder = new EmbedBuilder().setTitle("SYSTEM -").setDescription("Terminating CommandServiceBranch#" + i).setColor(java.awt.Color.red);
@@ -106,11 +105,44 @@ public class Main implements EventListener{
 
                         System.exit(0);
 
+                    } else if(message.getMessage().getContentRaw().toLowerCase().startsWith("!thread")){
+
+                        String[] parameters = message.getMessage().getContentRaw().split(" ", 10);
+
+                        switch (parameters[1]){
+                            case "create":
+                                switch (parameters[2]){
+                                    case "dummy":
+                                        DummyThread process = new DummyThread();
+                                        process.start();
+                                        dummyVendors.add(process);
+                                    case "commandVendor":
+                                        CommandProcessor cProcess = new CommandProcessor(message.getMessage(), true);
+                                        cProcess.start();
+                                        commandVendors.add(cProcess);
+
+                                }
+                            case "stop":
+
+                        }
+
                     } else {
 
-                        CommandProcesser process = new CommandProcesser(message);
-                        process.start();
-                        threadList.add(process);
+                        CommandProcessor currentProcessor = null;
+
+                        for (CommandProcessor cmdProcessor: commandVendors) {
+                            if(!CommandProcessor.inUse){
+                                currentProcessor = cmdProcessor;
+                            }
+                        }
+
+                        if (currentProcessor != null){
+                            currentProcessor.RequestCommand(message.getMessage());
+                        } else{
+                            CommandProcessor process = new CommandProcessor(message.getMessage(), false);
+                            process.start();
+                            commandVendors.add(process);
+                        }
                     }
 
 
