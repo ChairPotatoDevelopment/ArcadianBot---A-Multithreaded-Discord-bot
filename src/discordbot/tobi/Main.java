@@ -74,7 +74,7 @@ public class Main implements EventListener{
 
             @Override
             public void onEvent(Event event) {
-
+                System.out.println("Message!");
                 /*
                 Some commands are awkward to work with in the CommandProcessor. This is for
                 certain commands which would fit better outside of the CommandProcessor such as
@@ -85,7 +85,7 @@ public class Main implements EventListener{
                 if (event instanceof MessageReceivedEvent) {
 
                     MessageReceivedEvent message = ((MessageReceivedEvent) event);
-
+                    System.out.println("Is Command!");
                     if (message.getMessage().getContentRaw().toLowerCase().startsWith("!shutdown")) {
                         int i = 0;
                         for (Thread thread: commandVendors){
@@ -107,7 +107,7 @@ public class Main implements EventListener{
                         System.exit(0);
 
                     } else if(message.getMessage().getContentRaw().toLowerCase().startsWith("!thread")){
-
+                        System.out.println("Is thread Command!!");
                         String[] parameters = message.getMessage().getContentRaw().split(" ", 10);
 
                         switch (parameters[1]){
@@ -117,7 +117,8 @@ public class Main implements EventListener{
                                         DummyThread process = new DummyThread();
                                         process.start();
                                         dummyVendors.add(process);
-                                        message.getTextChannel().sendMessage(new EmbedBuilder().setAuthor("System").setTitle("DummyVendor#" + Main.dummyVendors.indexOf(process)).setDescription("DummyVendor#" + Main.dummyVendors.indexOf(process) + " has been successfully created.").setColor(Color.green).build()).complete();
+                                        message.getTextChannel().sendMessage(new EmbedBuilder().setTitle("DummyVendor#" + Main.dummyVendors.indexOf(process)).setDescription("DummyVendor#" + Main.dummyVendors.indexOf(process) + " has been successfully created.").setColor(Color.green).build()).complete();
+
                                         break;
                                     case "commandVendor":
                                         CommandProcessor cProcess = new CommandProcessor(message.getMessage(), true);
@@ -130,6 +131,16 @@ public class Main implements EventListener{
                             case "list":
                                 for (Thread thr: dummyVendors) {
                                     message.getTextChannel().sendMessage(new EmbedBuilder().setAuthor("System").setTitle("DummyVendor#" + Main.dummyVendors.indexOf(thr)).setDescription("DummyVendor#" + Main.dummyVendors.indexOf(thr) + " is running.").setColor(Color.magenta).build()).complete();
+
+                                }
+                                for (CommandProcessor thr: commandVendors) {
+                                    String active = null;
+                                    if(thr.inUse){
+                                        active = "True";
+                                    } else {
+                                        active = "False";
+                                    }
+                                    message.getTextChannel().sendMessage(new EmbedBuilder().setAuthor("System").setTitle("CommandVendor#" + Main.commandVendors.indexOf(thr)).setDescription("CommandVendor#" + Main.commandVendors.indexOf(thr) + " is running.").addField("Is Active?", active, true).setColor(Color.magenta).build()).complete();
 
                                 }
                                 break;
@@ -147,11 +158,14 @@ public class Main implements EventListener{
                         }
 
                         if (currentProcessor != null){
+                            System.out.println("Old Thread #" + Main.commandVendors.indexOf(currentProcessor));
                             currentProcessor.RequestCommand(message.getMessage());
                         } else{
+
                             CommandProcessor process = new CommandProcessor(message.getMessage(), false);
                             process.start();
                             commandVendors.add(process);
+                            System.out.println("Fresh thread #" + Main.commandVendors.indexOf(process));
                         }
                     }
 
