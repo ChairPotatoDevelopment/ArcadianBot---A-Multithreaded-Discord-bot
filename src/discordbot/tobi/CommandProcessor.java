@@ -15,11 +15,11 @@ import java.util.Map;
 
 public class CommandProcessor extends Thread{
 
-    public static boolean inUse;
-    public static boolean isRequested;
-    public static boolean ForcedActive;
+    public boolean inUse;
+    private boolean isRequested;
+    private boolean ForcedActive;
 
-    public static Message message;
+    private Message message;
 
     public CommandProcessor(Message msg, boolean isForcedActive) {
         message = msg;
@@ -33,21 +33,18 @@ public class CommandProcessor extends Thread{
 
     }
 
-    public static boolean RequestCommand(Message msg){
+    public void RequestCommand(Message msg){
         if(!inUse) {
             isRequested = true;
             message = msg;
-            return true;
-        } else{
-            return false;
         }
 
     }
 
-    public void processCommand(Message msg){
+    private void processCommand(Message msg){
         inUse = true;
         message = msg;
-        System.out.println("In Use #" + Main.commandVendors.indexOf(this));
+        System.out.println("[CMD-P]In Use #" + Main.commandVendors.indexOf(this));
 
         if (message.getContentRaw().toLowerCase().startsWith("!ping")) {
 
@@ -62,16 +59,13 @@ public class CommandProcessor extends Thread{
             while (true) {
                 try {
                     synchronized (this) {
-                        this.wait(100);
+                        this.wait(1000);
                     }
                 } catch (InterruptedException err) {
                     message.getTextChannel().sendMessage(new EmbedBuilder().setAuthor("System").setTitle("CommandVendor#" + Main.commandVendors.indexOf(this) + " ERROR").setDescription("CommandVendor#" + Main.commandVendors.indexOf(this) + " reached an exception and must be forcefully shutdown. All data and activities on this thread shall be terminated.").setColor(Color.red).build()).complete();
                     return;
                 }
             }
-        }else {
-
-
         }
 
 
@@ -88,7 +82,7 @@ public class CommandProcessor extends Thread{
             int tryCount = 0;
 
             while (!isRequested) {
-                if (tryCount < 5) {
+                if (tryCount < 30) {
                     try {
                         synchronized (this) {
                             this.wait(1000);
