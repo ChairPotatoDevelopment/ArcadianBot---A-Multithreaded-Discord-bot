@@ -31,9 +31,9 @@ public class Main extends ListenerAdapter{
     public static void main(String[] args){
 
         JDABuilder botBuilder = new JDABuilder(AccountType.BOT);
-        botBuilder.setToken("MzkxNjI4MTk3MjM5NzE3ODg4.DS-vVA.ns0Syg8wYWliGhwj1sQRd4X6aus");
+        botBuilder.setToken("[Enter-Code-Here]");
         botBuilder.setAutoReconnect(true);
-        botBuilder.setGame(Game.playing("Architecture-T3"));
+        botBuilder.setGame(Game.listening("ArchT3"));
         botBuilder.setStatus(OnlineStatus.DO_NOT_DISTURB);
         botBuilder.addEventListener(new Main());
 
@@ -60,7 +60,7 @@ public class Main extends ListenerAdapter{
 
             //Icon ico = Icon.from(new File("D:/boticon.png"));
             //jda.getSelfUser().getManager().setAvatar(ico).queue();
-            jda.getSelfUser().getManager().setName("Arcadian").queue();
+            jda.getSelfUser().getManager().setName("HoundGuard").queue();
 
 
     }
