@@ -25,7 +25,7 @@ public class Main extends ListenerAdapter{
     //public static List<Thread> gameVendors = new ArrayList<>();
     //public static List<Thread> dataVendors = new ArrayList<>();
     //public static List<Thread> miscVendors = new ArrayList<>();
-    private static List<Thread> dummyVendors = new ArrayList<>();
+    private static List<DummyThread> dummyVendors = new ArrayList<>();
 
 
     public static void main(String[] args){
@@ -123,12 +123,12 @@ public class Main extends ListenerAdapter{
                     case "stop":
                         break;
                     case "list":
-                        for (Thread thr : dummyVendors) {
+                        for (DummyThread thr : dummyVendors) {
                             message.getMessage().getTextChannel().sendMessage(new EmbedBuilder().setAuthor("System").setTitle("DummyVendor#" + Main.dummyVendors.indexOf(thr)).setDescription("DummyVendor#" + Main.dummyVendors.indexOf(thr) + " is running.").setColor(Color.magenta).build()).complete();
 
                         }
                         for (CommandProcessor thr : commandVendors) {
-                            String active = null;
+                            String active;
                             if (thr.inUse) {
                                 active = "True";
                             } else {
