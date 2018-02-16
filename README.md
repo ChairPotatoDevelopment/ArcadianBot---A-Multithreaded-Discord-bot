@@ -1,1 +1,2 @@
 # ArcadianBot
+Hi.
