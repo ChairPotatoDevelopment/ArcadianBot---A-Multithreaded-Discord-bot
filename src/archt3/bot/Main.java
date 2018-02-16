@@ -31,7 +31,7 @@ public class Main extends ListenerAdapter{
     public static void main(String[] args){
 
         JDABuilder botBuilder = new JDABuilder(AccountType.BOT);
-        botBuilder.setToken("MzkxNjI4MTk3MjM5NzE3ODg4.DS-vVA.ns0Syg8wYWliGhwj1sQRd4X6aus");
+        botBuilder.setToken("[Insert-Code-Here]");
         botBuilder.setAutoReconnect(true);
         botBuilder.setGame(Game.playing("Architecture-T3"));
         botBuilder.setStatus(OnlineStatus.DO_NOT_DISTURB);
