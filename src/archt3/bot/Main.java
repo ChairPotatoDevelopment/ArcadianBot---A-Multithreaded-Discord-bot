@@ -1,4 +1,4 @@
-package discordbot.tobi;
+package archt3.bot;
 
 import net.dv8tion.jda.core.*;
 

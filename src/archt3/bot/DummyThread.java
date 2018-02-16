@@ -1,4 +1,4 @@
-package discordbot.tobi;
+package archt3.bot;
 
 public class DummyThread extends Thread{
 
