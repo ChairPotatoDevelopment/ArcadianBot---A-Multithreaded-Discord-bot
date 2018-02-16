@@ -22,6 +22,7 @@ public class Main extends ListenerAdapter{
     private static JDA jda;
 
     public static List<CommandProcessor> commandVendors = new ArrayList<>();
+    public static List<StorageService> DataServices = new ArrayList<>();
     //public static List<Thread> gameVendors = new ArrayList<>();
     //public static List<Thread> dataVendors = new ArrayList<>();
     //public static List<Thread> miscVendors = new ArrayList<>();
