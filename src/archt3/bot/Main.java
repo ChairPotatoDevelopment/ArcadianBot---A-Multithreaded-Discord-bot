@@ -29,6 +29,30 @@ public class Main extends ListenerAdapter{
     private static List<DummyThread> dummyVendors = new ArrayList<>();
 
 
+    public StorageService getStorageService(){
+        StorageService currentProcessor = null;
+
+        for (StorageService storageS : Main.DataServices) {
+            if (!storageS.inUse) {
+                currentProcessor = storageS;
+            }
+        }
+
+        if (currentProcessor != null) {
+            System.out.println("[MAIN]Old Thread #" + Main.DataServices.indexOf(currentProcessor));
+            return currentProcessor;
+        } else {
+
+            StorageService process = new StorageService(false);
+            process.start();
+            Main.DataServices.add(process);
+            System.out.println("[MAIN]Fresh thread #" + Main.DataServices.indexOf(process));
+            return process;
+        }
+
+
+    }
+
     public static void main(String[] args){
 
         JDABuilder botBuilder = new JDABuilder(AccountType.BOT);

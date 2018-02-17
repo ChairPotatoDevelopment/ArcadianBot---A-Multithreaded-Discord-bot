@@ -26,6 +26,8 @@ public class CommandProcessor extends Thread{
 
     }
 
+
+
     public void RequestCommand(Message msg){
         if(!inUse) {
             isRequested = true;

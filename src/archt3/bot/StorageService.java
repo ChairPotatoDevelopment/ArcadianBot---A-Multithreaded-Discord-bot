@@ -1,5 +1,7 @@
 package archt3.bot;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 
@@ -9,9 +11,13 @@ public class StorageService extends Thread{
 
     public boolean ForcedActive;
     public boolean inUse;
-    public boolean isRequested;
+    private boolean isRequested;
 
-    private Message message;
+    private Object result;
+
+    private String requestedLocation;
+    private String DataMode;
+    private String currentDatabaseID;
 
     public StorageService(boolean isForcedActive) {
         ForcedActive = isForcedActive;
@@ -37,7 +43,7 @@ public class StorageService extends Thread{
                             this.wait(1000);
                         }
                     } catch (InterruptedException err) {
-                        message.getTextChannel().sendMessage(new EmbedBuilder().setAuthor("System").setTitle("CommandVendor#" + Main.DataServices.indexOf(this) + " ERROR").setDescription("StorageService#" + Main.DataServices.indexOf(this) + " reached an exception and must be forcefully shutdown. All data and activities on this thread shall be terminated.").setColor(Color.red).build()).complete();
+                        System.out.println("StorageService#" + Main.DataServices.indexOf(this) + " ERROR");
                         return;
                     }
                     tryCount++;
@@ -48,17 +54,75 @@ public class StorageService extends Thread{
 
             }
 
-            //processCommand(message);
+            getStorage();
 
         }
     }
 
-    public void RequestCommand(Message msg){
-        if(!inUse) {
-            isRequested = true;
-            message = msg;
+    private void getStorage(){
+
+        String[] locSplit = requestedLocation.split("/");
+
+
+        if(currentDatabaseID.startsWith("server")) {
+            String serverID = currentDatabaseID.substring(5);
+
+            Object fetchedData;
+            JsonObject previousLevel;
+
+            for (String cLevel : locSplit) {
+
+            }
         }
 
+        if(currentDatabaseID.startsWith("#botdata")) {
+            Object fetchedData;
+            JsonObject previousLevel;
+
+            for (String cLevel : locSplit) {
+
+            }
+        }
+
+        /*
+
+        User data will be used for general bot stuff such as "Hound Cross-Server Banning"
+        or "User Profiles" and not for things like "Local Mutes" and per-server data. That
+        data will be stored in server Databases.
+
+        For now, User Data is staying unused.
+
+        if(currentDatabaseID.startsWith("#user")) {
+            Object fetchedData;
+            JsonObject previousLevel;
+
+            for (String cLevel : locSplit) {
+
+            }
+        }*/
+    }
+
+    public Object RequestStorage(String databaseID, String location, String setOrAccess){
+        if(!inUse) {
+
+            isRequested = true;
+            requestedLocation = location;
+            DataMode = setOrAccess;
+            result = null;
+        }
+
+        while(result == null){
+            try {
+                synchronized (this) {
+                    this.wait(1000);
+                }
+            } catch (InterruptedException err) {
+                System.out.println("StorageService#" + Main.DataServices.indexOf(this) + " ERROR");
+                return err;
+            }
+        }
+
+        return result;
     }
 
 }
