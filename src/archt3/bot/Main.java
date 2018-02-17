@@ -22,18 +22,43 @@ public class Main extends ListenerAdapter{
     private static JDA jda;
 
     public static List<CommandProcessor> commandVendors = new ArrayList<>();
+    public static List<StorageService> DataServices = new ArrayList<>();
     //public static List<Thread> gameVendors = new ArrayList<>();
     //public static List<Thread> dataVendors = new ArrayList<>();
     //public static List<Thread> miscVendors = new ArrayList<>();
     private static List<DummyThread> dummyVendors = new ArrayList<>();
 
 
+    public StorageService getStorageService(){
+        StorageService currentProcessor = null;
+
+        for (StorageService storageS : Main.DataServices) {
+            if (!storageS.inUse) {
+                currentProcessor = storageS;
+            }
+        }
+
+        if (currentProcessor != null) {
+            System.out.println("[MAIN]Old Thread #" + Main.DataServices.indexOf(currentProcessor));
+            return currentProcessor;
+        } else {
+
+            StorageService process = new StorageService(false);
+            process.start();
+            Main.DataServices.add(process);
+            System.out.println("[MAIN]Fresh thread #" + Main.DataServices.indexOf(process));
+            return process;
+        }
+
+
+    }
+
     public static void main(String[] args){
 
         JDABuilder botBuilder = new JDABuilder(AccountType.BOT);
-        botBuilder.setToken("[Insert-Code-Here]");
+        botBuilder.setToken("[Enter-Code-Here]");
         botBuilder.setAutoReconnect(true);
-        botBuilder.setGame(Game.playing("Architecture-T3"));
+        botBuilder.setGame(Game.listening("ArchT3"));
         botBuilder.setStatus(OnlineStatus.DO_NOT_DISTURB);
         botBuilder.addEventListener(new Main());
 
@@ -60,7 +85,7 @@ public class Main extends ListenerAdapter{
 
             //Icon ico = Icon.from(new File("D:/boticon.png"));
             //jda.getSelfUser().getManager().setAvatar(ico).queue();
-            jda.getSelfUser().getManager().setName("Arcadian").queue();
+            jda.getSelfUser().getManager().setName("ArchT3").queue();
 
 
     }
